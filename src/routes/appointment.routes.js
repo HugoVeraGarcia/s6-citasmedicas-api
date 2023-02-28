@@ -9,10 +9,9 @@ const {
     cancelAppointment,
 } = require('../controllers/appointment.controller');
 
-// const {
-//     appointmentExists
-// } = require('../middlewares/isAppointment')
-
+const {
+    mailConfirmacion
+} = require('../controllers/nodemailerConfirmacionTurno.controller')
 const {
     protectToken,
     protectAdmin,
@@ -31,6 +30,8 @@ router.get('/', getAllAppointment);
 router.get('/:id', getAppointmentByUser);
 router.post('/', validateAppointmentFields, createAppointment);
 router.get('/cancel/:id', cancelAppointment);
+// correo de confirmación de nueva cita
+router.post('/confirmation', mailConfirmacion);
 
 
 module.exports = { AppointmentRouter: router };

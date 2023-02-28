@@ -23,7 +23,7 @@ const { CodeRouter } = require('./routes/code.routes');
 const { DoctorRouter } = require('./routes/doctor.routes')
 const { ScheduleRouter } = require('./routes/schedule.routes')
 const { AppointmentRouter } = require('./routes/appointment.routes')
-// const { passwordResetRouter } = require('./routes/passwordReset')
+const { passwordResetRouter } = require('./routes/passwordReset')
 
 // Enable CORS
 app.use(cors());
@@ -65,7 +65,7 @@ app.use('/api/v1/code', CodeRouter);
 app.use('/api/v1/doctor', DoctorRouter);
 app.use('/api/v1/schedule', ScheduleRouter);
 app.use('/api/v1/appointment', AppointmentRouter);
-// app.use('/api/v1/password', passwordResetRouter);
+app.use('/api/v1/password', passwordResetRouter);
 
 
 // Global error handler
