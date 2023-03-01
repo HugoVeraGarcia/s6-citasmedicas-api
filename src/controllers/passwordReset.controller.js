@@ -56,8 +56,13 @@ const passwordEmail = catchAsync(async (req, res, next) => {
                 console.log(error);
                 res.status(500).send('Error sending email');
             } else {
-                //   console.log('Email sent: ' + info.response);
-                res.status(200).send({result:'Email sent successfully'});
+                // console.log('Email sent: ' + info.response);
+                // res.status(200).send({ result: 'Email sent successfully' });
+                res.status(200).json({
+                    status: 'Success',
+                    message: 'Email sent successfully',
+                  });
+        
             }
         });
     } catch (error) {
@@ -75,38 +80,43 @@ const passwordReset = catchAsync(async (req, res, next) => {
     console.log('hello world!');
     console.log('token', token);
     try {
-      // Find the user with the given reset token
-    const user = await User.findOne({ where: { resetToken: token } });
-    console.log('user', user);
-    if (!user) {
-    return res.status(400).send('Invalid or expired password reset token');
-}
+        // Find the user with the given reset token
+        const user = await User.findOne({ where: { resetToken: token } });
+        console.log('user', user);
+        if (!user) {
+        return res.status(400).send('Invalid or expired password reset token');
+        }
 
-  // Check if the token is still valid
-  // const now = new Date();
-  // if (now > user.reset_password_expires) {
-  //   return res.status(400).send('Invalid or expired password reset token');
-  // }
-  
-  // Hash the new password and update the user's password
-  // const hashedPassword = bcrypt.hashSync(password, 8);
-  const salt = await bcrypt.genSalt(12);
-  const hashedPassword = await bcrypt.hash(password, salt);
-  console.log(hashedPassword);
-  await user.update({ password: hashedPassword });
-  
-  
-  // Clear the reset token and expiration time
-  await user.update({
-    resetToken: null,
-    // reset_password_expires: null,
-  });
-  
-  res.status(200).send({result: 'Password reset successfully'});} catch (error) {
-  console.error(error);
-  res.status(500).send('Server error');
-  }
-
+        // Check if the token is still valid
+        // const now = new Date();
+        // if (now > user.reset_password_expires) {
+        //   return res.status(400).send('Invalid or expired password reset token');
+        // }
+    
+        // Hash the new password and update the user's password
+        // const hashedPassword = bcrypt.hashSync(password, 8);
+        const salt = await bcrypt.genSalt(12);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        console.log(hashedPassword);
+        await user.update({ password: hashedPassword });
+    
+    
+        // Clear the reset token and expiration time
+        await user.update({
+            resetToken: null,
+            // reset_password_expires: null,
+        });
+        
+        // res.status(200).send({ result: 'Password reset successfully' });
+        res.status(200).json({
+            status: 'Success',
+            message: 'Password reset successfully',
+          });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
 });
 
 module.exports = { passwordEmail, passwordReset }
