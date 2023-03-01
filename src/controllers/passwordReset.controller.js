@@ -18,7 +18,7 @@ const passwordEmail = catchAsync(async (req, res, next) => {
         // Check if the email is valid and exists in the database
         const user = await User.findOne({ where: { email } });
         if (!user) {
-            return res.status(400).send({message: 'Invalid email address'});
+            return res.status(400).send('Invalid email address');
         }
   
         // Generate a password reset token and save it to the database
@@ -54,15 +54,15 @@ const passwordEmail = catchAsync(async (req, res, next) => {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-                res.status(500).send({message: 'Error sending email'});
+                res.status(500).send('Error sending email');
             } else {
                 //   console.log('Email sent: ' + info.response);
-                res.status(200).send({message: 'Email sent successfully'});
+                res.status(200).send({result:'Email sent successfully'});
             }
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send({message: 'Server error'});
+        res.status(500).send('Server error');
     }
 });
 
@@ -79,7 +79,7 @@ const passwordReset = catchAsync(async (req, res, next) => {
     const user = await User.findOne({ where: { resetToken: token } });
     console.log('user', user);
     if (!user) {
-    return res.status(400).send({message: 'Invalid or expired password reset token'});
+    return res.status(400).send('Invalid or expired password reset token');
 }
 
   // Check if the token is still valid
@@ -102,9 +102,9 @@ const passwordReset = catchAsync(async (req, res, next) => {
     // reset_password_expires: null,
   });
   
-  res.status(200).send({message: 'Password reset successfully'});} catch (error) {
+  res.status(200).send('Password reset successfully');} catch (error) {
   console.error(error);
-  res.status(500).send({message: 'Server error'});
+  res.status(500).send('Server error');
   }
 
 });
