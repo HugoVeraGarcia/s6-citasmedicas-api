@@ -102,7 +102,7 @@ const passwordReset = catchAsync(async (req, res, next) => {
     // reset_password_expires: null,
   });
   
-  res.status(200).send('Password reset successfully');} catch (error) {
+  res.status(200).send({result: 'Password reset successfully'});} catch (error) {
   console.error(error);
   res.status(500).send('Server error');
   }
