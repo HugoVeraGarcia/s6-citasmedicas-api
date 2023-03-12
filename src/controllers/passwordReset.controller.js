@@ -18,7 +18,10 @@ const passwordEmail = catchAsync(async (req, res, next) => {
         // Check if the email is valid and exists in the database
         const user = await User.findOne({ where: { email } });
         if (!user) {
-            return res.status(400).send('Invalid email address');
+            return res.status(400).json({
+                status: 'Error',
+                message: 'Invalid email address',
+            });
         }
   
         // Generate a password reset token and save it to the database
@@ -54,7 +57,11 @@ const passwordEmail = catchAsync(async (req, res, next) => {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-                res.status(500).send('Error sending email');
+                res.status(500).json({
+                    status: 'Error',
+                    message: 'Error sending email',
+                    err: error
+                });
             } else {
                 // console.log('Email sent: ' + info.response);
                 // res.status(200).send({ result: 'Email sent successfully' });
@@ -67,7 +74,11 @@ const passwordEmail = catchAsync(async (req, res, next) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).json({
+            status: 'Error',
+            message: 'Server error'
+        });
+
     }
 });
 
@@ -75,24 +86,14 @@ const passwordEmail = catchAsync(async (req, res, next) => {
 const passwordReset = catchAsync(async (req, res, next) => { 
 
     const { password } = req.body;
-    console.log('password', password);
     const { token } = req.params;
-    console.log('hello world!');
-    console.log('token', token);
     try {
         // Find the user with the given reset token
         const user = await User.findOne({ where: { resetToken: token } });
-        console.log('user', user);
         if (!user) {
         return res.status(400).send('Invalid or expired password reset token');
         }
 
-        // Check if the token is still valid
-        // const now = new Date();
-        // if (now > user.reset_password_expires) {
-        //   return res.status(400).send('Invalid or expired password reset token');
-        // }
-    
         // Hash the new password and update the user's password
         // const hashedPassword = bcrypt.hashSync(password, 8);
         const salt = await bcrypt.genSalt(12);
@@ -115,7 +116,10 @@ const passwordReset = catchAsync(async (req, res, next) => {
     }
     catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).json({
+            status: 'Error',
+            message: 'Server error',
+          });
     }
 });
 
